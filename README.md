@@ -4,7 +4,7 @@ POSIX Thread Implementation
 For our second project we were to create a multithreaded system. To do this we created 3 functions:
 pthread_create, pthread_exit, pthread_self, and a scheduler.
 
-pthreate_create
+pthread_create
 ======
 In this function I have a flag that is only used to create the main thread.
 Once it creates the main thread, I turn the flag off and initialize all of the threads' status 
