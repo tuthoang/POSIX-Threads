@@ -61,7 +61,7 @@ struct Semaphore semaphores[MAXSEM];
 int sem_tracker = 0;
 int SEM_ID = 0;
 struct sigaction sig;
-sigset_t signal_set;
+sigset_t sigset;
 
 
 static int ptr_mangle(int p){
@@ -194,7 +194,7 @@ void pthread_exit(void* value_ptr){
     threads[threads[thread_tracker].join_ID].status = 1; 
   }
   //free the stack
-  // free(threads[thread_tracker].exit_ptr);
+  free(threads[thread_tracker].exit_ptr);
 
   //call scheduler to get next ready thread
   scheduler();
@@ -210,10 +210,11 @@ int pthread_join(pthread_t thread, void **value_ptr){
     threads[(int)thread].join_ID = thread_tracker;
   }
   scheduler();
+  
   if(value_ptr != NULL){
     *value_ptr = threads[(int)thread].exit_val;
   }
-  free(threads[(int)thread].exit_ptr);
+  // free(threads[(int)thread].exit_ptr);
 
   return 0;
 }
@@ -302,7 +303,7 @@ int sem_destroy(sem_t *sem){
 
 void lock(){
   sigemptyset(&sigset);                       //Initialize and empty sigset
-  sigaddset(&sigset, SIGALRM);                //Add SIGALRM to sigset
+  sigaddset(&sigset, SIGALRM);                //Add SIGALRM to list sigset
   sigprocmask(SIG_BLOCK, &sigset, NULL);      //Change signal mask of calling thread to blocked
 }
 
